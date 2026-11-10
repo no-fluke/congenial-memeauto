@@ -1,0 +1,69 @@
+{
+    "name": "AppX Telegram Bot",
+    "description": "AppX / Parmar Academy course downloader — Telegram bot that downloads encrypted video lectures",
+    "logo": "",
+    "keywords": [
+        "appx",
+        "downloader",
+        "pyrogram",
+        "telegram-bot"
+    ],
+    "repository": "",
+    "success_url": "",
+    "stack": "container",
+    "env": {
+        "API_ID": {
+            "description": "Telegram API ID — get from https://my.telegram.org",
+            "value": "",
+            "required": true
+        },
+        "API_HASH": {
+            "description": "Telegram API Hash — get from https://my.telegram.org",
+            "value": "",
+            "required": true
+        },
+        "BOT_TOKEN": {
+            "description": "Telegram Bot Token — get from @BotFather",
+            "value": "",
+            "required": true
+        },
+        "OWNER": {
+            "description": "Your Telegram numeric user ID (send /id to the bot after it starts)",
+            "value": "",
+            "required": true
+        },
+        "MONGO_URL": {
+            "description": "MongoDB connection string — free cluster at https://cloud.mongodb.com  e.g. mongodb+srv://user:pass@cluster.mongodb.net/?retryWrites=true&w=majority",
+            "value": "",
+            "required": true
+        },
+        "CREDIT": {
+            "description": "Display name shown in video captions (6–8 letters)",
+            "value": "MRBERLIN",
+            "required": false
+        },
+        "VIMEO_WORKER_URL": {
+            "description": "Cloudflare Worker URL for Vimeo signed URL extraction (optional)",
+            "value": "",
+            "required": false
+        },
+        "cookies_file_path": {
+            "description": "Path to YouTube cookies file (default: youtube_cookies.txt)",
+            "value": "youtube_cookies.txt",
+            "required": false
+        },
+        "WM_MAX_PARALLEL": {
+            "description": "Max parallel watermark encodes (default: 2)",
+            "value": "2",
+            "required": false
+        }
+    },
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "Standard-2X"
+        }
+    },
+    "addons": [],
+    "buildpacks": []
+}

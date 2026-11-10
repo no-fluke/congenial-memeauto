@@ -1,0 +1,26 @@
+pyrogram==2.0.106
+pyromod==1.5
+tgcrypto
+aiohttp
+aiofiles
+pycryptodome
+requests
+pymongo[srv]
+certifi
+colorama
+cloudscraper
+beautifulsoup4
+m3u8
+yt-dlp
+pytube
+pytz
+apscheduler==3.10.4
+ffmpeg-python
+
+# ─── Web server (keepalive dyno) ───────────────────────────────────────────────
+Flask==2.3.3
+gunicorn==21.2.0
+Werkzeug==2.3.7
+
+# ─── Stability fix ─────────────────────────────────────────────────────────────
+setuptools<81
