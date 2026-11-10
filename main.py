@@ -2834,6 +2834,5 @@ load_cookies_from_db()
 os.makedirs(os.path.join(tempfile.gettempdir(), "downloads"), exist_ok=True)
 
 if __name__ == "__main__":
-    print("\033[92m✓ AppX Downloader Bot starting…\033[0m")
-    _sched.start_scheduler()
-    bot.run()
+   print("\033[92m✓ AppX Downloader Bot starting…\033[0m")
+bot.run()
