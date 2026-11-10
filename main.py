@@ -2829,9 +2829,11 @@ if __name__ == "__main__":
     reset_and_set_commands()
     notify_owner()
 
+
 load_cookies_from_db()
 os.makedirs(os.path.join(tempfile.gettempdir(), "downloads"), exist_ok=True)
 
-print("\033[92m✓ AppX Downloader Bot starting…\033[0m")
-_sched.start_scheduler()
-bot.run()
+if __name__ == "__main__":
+    print("\033[92m✓ AppX Downloader Bot starting…\033[0m")
+    _sched.start_scheduler()
+    bot.run()
