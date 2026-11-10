@@ -124,6 +124,11 @@ async def run_scheduled_job(schedule_id: str):
         )
     except Exception as e:
         logger.error(f"[Scheduler] start-notify failed: {e}")
+        if "peer" in str(e).lower() or "chat not found" in str(e).lower():
+            logger.error(
+                f"[Scheduler] Bot is not a member of supergroup {supergroup} "
+                f"or the ID is wrong. Add the bot as admin and retry."
+            )
         # don't abort — continue with the actual download job
 
     downloads_dir = os.path.join(tempfile.gettempdir(), "downloads")
@@ -190,7 +195,7 @@ async def run_scheduled_job(schedule_id: str):
                     supergroup,
                     f"📥 **{sn} → {tn}**\n"
                     f"{len(new_lecs)} new lecture(s) found, downloading…",
-                    message_thread_id=thread_id
+                    reply_to_message_id=thread_id
                 )
 
                 # Build a minimal Message proxy for run_lecture_loop
@@ -206,7 +211,7 @@ async def run_scheduled_job(schedule_id: str):
                         try:
                             await bot.send_message(
                                 supergroup, text,
-                                message_thread_id=_thread_id_capture, **kw
+                                reply_to_message_id=_thread_id_capture, **kw
                             )
                         except Exception:
                             pass
@@ -256,7 +261,7 @@ async def run_scheduled_job(schedule_id: str):
                     try:
                         await bot.send_message(
                             supergroup, text,
-                            message_thread_id=series_thread, **kw
+                            reply_to_message_id=series_thread, **kw
                         )
                     except Exception:
                         pass
@@ -266,13 +271,13 @@ async def run_scheduled_job(schedule_id: str):
             _orig_sd = bot.send_document
 
             async def _sm_ts(chat_id, text, **kw):
-                if chat_id == supergroup and "message_thread_id" not in kw:
-                    kw["message_thread_id"] = series_thread
+                if chat_id == supergroup and "reply_to_message_id" not in kw:
+                    kw["reply_to_message_id"] = series_thread
                 return await _orig_sm(chat_id, text, **kw)
 
             async def _sd_ts(chat_id, **kw):
-                if chat_id == supergroup and "message_thread_id" not in kw:
-                    kw["message_thread_id"] = series_thread
+                if chat_id == supergroup and "reply_to_message_id" not in kw:
+                    kw["reply_to_message_id"] = series_thread
                 return await _orig_sd(chat_id, **kw)
 
             bot.send_message  = _sm_ts
@@ -324,18 +329,18 @@ async def _run_loop_with_thread(
     _orig_sv = bot_client.send_video
 
     async def _sm(chat_id, text, **kw):
-        if chat_id == channel_id and thread_id and "message_thread_id" not in kw:
-            kw["message_thread_id"] = thread_id
+        if chat_id == channel_id and thread_id and "reply_to_message_id" not in kw:
+            kw["reply_to_message_id"] = thread_id
         return await _orig_sm(chat_id, text, **kw)
 
     async def _sd(chat_id, **kw):
-        if chat_id == channel_id and thread_id and "message_thread_id" not in kw:
-            kw["message_thread_id"] = thread_id
+        if chat_id == channel_id and thread_id and "reply_to_message_id" not in kw:
+            kw["reply_to_message_id"] = thread_id
         return await _orig_sd(chat_id, **kw)
 
     async def _sv(chat_id, **kw):
-        if chat_id == channel_id and thread_id and "message_thread_id" not in kw:
-            kw["message_thread_id"] = thread_id
+        if chat_id == channel_id and thread_id and "reply_to_message_id" not in kw:
+            kw["reply_to_message_id"] = thread_id
         return await _orig_sv(chat_id, **kw)
 
     bot_client.send_message  = _sm
