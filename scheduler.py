@@ -83,9 +83,10 @@ async def run_scheduled_job(schedule_id: str):
     creates forum threads, skips already-downloaded lectures,
     downloads only new ones.  Then handles test series if enabled.
     """
+    import sys
     from db import db as _db
     import aiohttp
-    import main as _main
+    _main = sys.modules["__main__"]
 
     doc = _db.get_schedule_by_id(schedule_id)
     if not doc:
@@ -123,7 +124,7 @@ async def run_scheduled_job(schedule_id: str):
         )
     except Exception as e:
         logger.error(f"[Scheduler] start-notify failed: {e}")
-        return
+        # don't abort — continue with the actual download job
 
     downloads_dir = os.path.join(tempfile.gettempdir(), "downloads")
     os.makedirs(downloads_dir, exist_ok=True)
@@ -313,8 +314,9 @@ async def _run_loop_with_thread(
     prefer_quality, batch_watermark, session_credit,
     lectures, downloads_dir, schedule_id, db,
 ):
-    import main as _main
+    import sys
     import saini as helper
+    _main = sys.modules["__main__"]
 
     # Patch bot send methods
     _orig_sm = bot_client.send_message
@@ -452,6 +454,10 @@ def load_all_schedules():
 
 
 def start_scheduler():
+    """
+    Called from main.py inside @bot.on_connect() so the bot client
+    is fully connected before any scheduled job tries to send a message.
+    """
     if not scheduler.running:
         scheduler.start()
         load_all_schedules()
@@ -463,8 +469,9 @@ def start_scheduler():
 # ══════════════════════════════════════════════════════════════════════════════
 
 async def cmd_addschedule(bot_client, m):
+    import sys
     import aiohttp
-    import main as _main
+    _main = sys.modules["__main__"]
     from db import db as _db
     from vars import CREDIT
 
